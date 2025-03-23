@@ -7,16 +7,27 @@ app.use(express.json());
 const data = [];
 
 app.get("/data", (req, res) => {
-  res.json(data);
+  try {
+    res.json(data);
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).json({ success: false, message: "შიდა შეცდომა" });
+  }
 });
 
 app.post("/addItem", (req, res) => {
-  const { name, email, password } = req.body;
+  try {
+    const { name, email, password } = req.body;
 
-  const item = { name, email, password };
+    const item = { name, email, password };
 
-  data.push(item);
-  res.status(200).json({ success: true });
+    data.push(item);
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).json({ success: false, message: "შიდა შეცდომა" });
+  }
 });
 
 app.listen(3001, () => {
