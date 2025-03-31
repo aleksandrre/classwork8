@@ -6,25 +6,77 @@ import bcrypt from "bcrypt";
 const app = express();
 app.use(cors());
 app.use(express.json());
-const data = [
-  { name: "bmw", cylinder: 4, engine: "5.2" },
-  { name: "audi", cylinder: 8, engine: "4.2" },
-  { name: "golf", cylinder: 2, engine: "2.0" },
-];
 
-app.get("/data", (req, res) => {
-  res.json(data);
+app.post("/register", async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+      return res
+        .status(400)
+        .json({ success: false, message: "შეავსეთ ყველა ველი" });
+    }
+    const existingUser = await User.findOne({ email: email });
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "ასეთი მეილი უკვე დარეგისტრირებულია",
+      });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+    });
+    await user.save();
+    res
+      .status(201)
+      .json({ success: true, message: "წარმატებით გაიარეთ რეგისტრაცია" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "სერვერის შეცდომა" });
+  }
 });
 
-app.post("/addItem", (req, res) => {
-  const { name, cylinder, engine } = req.body;
-  const item = { name, cylinder, engine };
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-  data.push(item);
-
-  res.json({ success: true });
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ success: false, message: "შეავსეთ ყველა ველი" });
+    }
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      return res
+        .status(400)
+        .json({ success: false, message: "მეილი  არასწორია" });
+    }
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+    if (!isPasswordValid) {
+      return res
+        .status(400)
+        .json({ success: false, message: "პაროლი არასწორია" });
+    }
+    res
+      .status(200)
+      .json({ success: true, message: "თქვენ წარმატებით შეხვედით " });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "სერვერის შეცდომა" });
+  }
 });
 
+app.get("/getallUser", async (req, res) => {
+  try {
+    const AllUser = await User.find();
+    res.status(200).json({ success: true, data: AllUser });
+  } catch (err) {
+    res.status(500).json({ sucess: false, message: "სერვერის შეცდომა" });
+  }
+});
 app.listen(3001, () => {
   console.log("სერვერი დაისტარტა 3001 პორტზე");
   mongoose
