@@ -59,3 +59,57 @@ input {
   gap: 5px;
   color: white;
 }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  background-color: cornflowerblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.from {
+  padding: 10px;
+  background-color: brown;
+  width: 200px;
+  height: 150px;
+}
+
+input {
+  padding: 5px;
+}
+.div2 {
+  padding: 3px;
+  display: flex;
+  gap: 25px;
+}
+
+.btn {
+  margin-top: 20px;
+  width: 200px;
+  height: 40px;
+  padding: 10px;
+  background-color: chocolate;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.cards {
+  display: flex;
+  background-color: blueviolet;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+.card {
+  width: calc(25% - 22.5px);
+  height: 150px;
+  background-color: blue;
+}
