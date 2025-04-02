@@ -3,39 +3,12 @@ import cors from "cors";
 import mongoose from "mongoose";
 import User from "./models/User.js";
 import bcrypt from "bcrypt";
+import { register } from "./controllers/userController.js";
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post("/register", async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      return res
-        .status(400)
-        .json({ success: false, message: "შეავსეთ ყველა ველი" });
-    }
-    const existingUser = await User.findOne({ email: email });
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: "ასეთი მეილი უკვე დარეგისტრირებულია",
-      });
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({
-      name,
-      email,
-      password: hashedPassword,
-    });
-    await user.save();
-    res
-      .status(201)
-      .json({ success: true, message: "წარმატებით გაიარეთ რეგისტრაცია" });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "სერვერის შეცდომა" });
-  }
-});
+app.post("/register", register);
 
 app.post("/login", async (req, res) => {
   try {
@@ -61,10 +34,12 @@ app.post("/login", async (req, res) => {
         .status(400)
         .json({ success: false, message: "პაროლი არასწორია" });
     }
+    
     res
       .status(200)
       .json({ success: true, message: "თქვენ წარმატებით შეხვედით " });
   } catch (error) {
+    console.log(error.message)
     res.status(500).json({ success: false, message: "სერვერის შეცდომა" });
   }
 });
@@ -77,6 +52,7 @@ app.get("/getallUser", async (req, res) => {
     res.status(500).json({ sucess: false, message: "სერვერის შეცდომა" });
   }
 });
+
 app.listen(3001, () => {
   console.log("სერვერი დაისტარტა 3001 პორტზე");
   mongoose
