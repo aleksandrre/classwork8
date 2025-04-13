@@ -3,8 +3,8 @@ import bcrypt from "bcrypt";
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
+    const {  email, password } = req.body;
+    if ( !email || !password) {
       return res
         .status(400)
         .json({ success: false, message: "შეავსეთ ყველა ველი" });
@@ -18,7 +18,7 @@ export const register = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
-      name,
+      
       email,
       password: hashedPassword,
     });

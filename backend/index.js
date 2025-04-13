@@ -1,27 +1,14 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import User from "./models/User.js";
-import bcrypt from "bcrypt";
-import {
-  register,
-  login,
-  getAllUsers,
-  getOneUser,
-} from "./controllers/userController.js";
+
+import userRouter from "./routes/userRoute.js";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post("/register", register);
-
-app.post("/login", login);
-
-app.get("/getallUser", getAllUsers);
-console.log("s");
-
-app.get("/getOneUser/:id", getOneUser);
+app.use("/user", userRouter);
 
 app.listen(3001, () => {
   console.log("სერვერი დაისტარტა 3001 პორტზე");
