@@ -77,6 +77,7 @@ export const login = async (req, res) => {
 export const getAllUsers = async (req, res) => {
   try {
     const AllUser = await User.find();
+    console.log(req.user);
 
     res.status(200).json({ success: true, data: AllUser });
   } catch (err) {
