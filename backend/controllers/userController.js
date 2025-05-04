@@ -87,6 +87,7 @@ export const getAllUsers = async (req, res) => {
 
 export const getOneUser = async (req, res) => {
   try {
+    
     const { id } = req.params;
 
     if (!id) {

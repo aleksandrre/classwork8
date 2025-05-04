@@ -1,29 +1,54 @@
-const cards = document.getElementById("cards");
-
-const getData = async () => {
-  console.log("getuser");
-
-  const response = await fetch("http://localhost:3001/data");
-  console.log(response);
-  const data = await response.json();
-  console.log(data);
+const getallCar = async () => {
+  try {
+    const response = await fetch("http://localhost:3001/car");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
 };
-getData();
 
-const addItem = async () => {
-  const response = await fetch("http://localhost:3001/addItem", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: name.value,
-      email: email.value,
-      password: password.value,
-    }),
+const getOneCar = async () => {
+  try {
+    const carId = document.getElementById("input").value;
+    const response = await fetch(`http://localhost:3001/car/${carId}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const wrapper = document.querySelector(".wrapper");
+const displayCards = async () => {
+  const wrapper = document.querySelector(".wrapper");
+
+  const data = await getallCar();
+  // console.log(data);
+  data.cars.forEach((element) => {
+    wrapper.innerHTML += `
+     <div class="card">
+        <h1>name : ${element.name}</h1>
+        <h2>model : ${element.model}</h2>
+        <p>year : ${element.year}</p>
+        <p>price : ${element.price}</p>
+      </div>
+    `;
   });
-  const data = await response.json();
-  console.log(data);
 };
 
-addItem();
+displayCards();
+
+const displayCard = async () => {
+  wrapper.innerHTML = "";
+  const data = await getOneCar();
+  // console.log(data);
+
+  wrapper.innerHTML += `
+     <div class="card">
+        <h1>name : ${data.car.name}</h1>
+        <h2>model : ${data.car.model}</h2>
+        <p>year : ${data.car.year}</p>
+        <p>price : ${data.car.price}</p>
+      </div>
+    `;
+};

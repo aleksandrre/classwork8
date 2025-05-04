@@ -3,12 +3,16 @@ import cors from "cors";
 import mongoose from "mongoose";
 
 import userRouter from "./routes/userRoute.js";
+import carRouter from "./routes/carRoute.js";
 
 const app = express();
+
+//middlewares
 app.use(cors());
 app.use(express.json());
 
 app.use("/user", userRouter);
+app.use("/car", carRouter);
 
 app.listen(3001, () => {
   console.log("სერვერი დაისტარტა 3001 პორტზე");
