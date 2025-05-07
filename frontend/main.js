@@ -52,3 +52,18 @@ const displayCard = async () => {
       </div>
     `;
 };
+
+const burgerIcon = document.querySelector(".icon");
+const navbar = document.querySelector(".navbar");
+
+let visible = 0;
+
+burgerIcon.addEventListener("click", () => {
+  if (visible === 0) {
+    navbar.classList.add("active");
+    visible = 1;
+  } else {
+    navbar.classList.remove("active");
+    visible = 0;
+  }
+});
